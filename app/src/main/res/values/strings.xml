@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">GitHubSearch</string>
-    <string name="nome_usuario">Nome do usuário</string>
-    <string name="confirmar">Confirmar</string>
+    <string name="app_name">GitHub Search</string>
+    <string name="username">Nome do usuário</string>
+    <string name="search_repositopries">Buscar Repositórios</string>
+
+    <!--  SharedPreferences Keys  -->
+    <string name="pref_usernames">pref_usernames</string>
 </resources>

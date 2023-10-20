@@ -1,10 +1,13 @@
 package br.com.igorbag.githubsearch.ui
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import br.com.igorbag.githubsearch.R
@@ -13,38 +16,81 @@ import br.com.igorbag.githubsearch.domain.Repository
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var nomeUsuario: EditText
-    lateinit var btnConfirmar: Button
-    lateinit var listaRepositories: RecyclerView
-    lateinit var githubApi: GitHubService
+    lateinit var actvUsername: AutoCompleteTextView
+    lateinit var btnSearch: Button
+    lateinit var tvUsernames: TextView
+    lateinit var rvListRepositories: RecyclerView
+    lateinit var githubService: GitHubService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupView()
+        updateTVUsers()
+        setupListeners()
         showUserName()
         setupRetrofit()
         getAllReposByUserName()
+        setupAutoCompleteSugestions()
     }
 
-    // Metodo responsavel por realizar o setup da view e recuperar os Ids do layout
+    /**
+     * Recupera os componentes da tela
+     */
     fun setupView() {
-        //@TODO 1 - Recuperar os Id's da tela para a Activity com o findViewById
+        btnSearch = findViewById(R.id.btn_search)
+        actvUsername = findViewById(R.id.actv_username);
+        tvUsernames = findViewById(R.id.tv_usernames)
+        rvListRepositories = findViewById(R.id.rv_list_repositories)
     }
 
-    //metodo responsavel por configurar os listeners click da tela
+    /**
+     * Configura os listeners de click em componentes da tela
+     */
     private fun setupListeners() {
-        //@TODO 2 - colocar a acao de click do botao confirmar
+        btnSearch.setOnClickListener {
+            saveUserLocal()
+            updateTVUsers()
+            getAllReposByUserName()
+        }
     }
 
+    /**
+     * Recupera lista de usuarios salvos no SharedPreferences
+     */
+    fun getUsersLocal(): List<String> {
+        val sharedPreferences = getPreferences(Context.MODE_PRIVATE) ?: return emptyList()
+        val usernamesStr = sharedPreferences.getString(getString(R.string.pref_usernames), "")
+        return usernamesStr?.split(",") ?: emptyList()
+    }
 
-    // salvar o usuario preenchido no EditText utilizando uma SharedPreferences
+    /**
+     * Salva usuario preenchido no EditText em uma lista de usuários utilizando SharedPreferences
+     */
     private fun saveUserLocal() {
-        //@TODO 3 - Persistir o usuario preenchido na editText com a SharedPref no listener do botao salvar
+        var usernamesList = getUsersLocal().toMutableList()
+        usernamesList.add(actvUsername.text.toString())
+
+        val usernamesStr = usernamesList.joinToString(",")
+
+        val sharedPreferences = getPreferences(Context.MODE_PRIVATE) ?: return
+        val editorPreferences = sharedPreferences.edit()
+        editorPreferences.putString(getString(R.string.pref_usernames), usernamesStr)
+        editorPreferences.apply()
     }
 
     private fun showUserName() {
         //@TODO 4- depois de persistir o usuario exibir sempre as informacoes no EditText  se a sharedpref possuir algum valor, exibir no proprio editText o valor salvo
+    }
+
+    private fun updateTVUsers() {
+        tvUsernames.text = getUsersLocal().joinToString(", ").substring(2)
+    }
+
+    private fun setupAutoCompleteSugestions() {
+        val suggestions = getUsersLocal()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, suggestions)
+        actvUsername.setAdapter(adapter)
     }
 
     //Metodo responsavel por fazer a configuracao base do Retrofit

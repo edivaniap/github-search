@@ -7,7 +7,7 @@
     tools:context=".ui.MainActivity">
 
     <TextView
-        android:id="@+id/tv_titulo"
+        android:id="@+id/tv_title"
         style="@style/TextAppearance.MaterialComponents.Headline5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,38 +16,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_nome_usuario"
+    <AutoCompleteTextView
+        android:id="@+id/actv_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:ems="10"
-        android:hint="@string/nome_usuario"
-        android:inputType="numberDecimal"
-        android:maxLength="10"
+        android:hint="@string/username"
+        android:inputType="textAutoComplete"
+        android:maxLength="30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_titulo" />
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
     <Button
-        android:id="@+id/btn_confirmar"
+        android:id="@+id/btn_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="@string/confirmar"
-        app:layout_constraintEnd_toEndOf="@id/et_nome_usuario"
-        app:layout_constraintStart_toStartOf="@id/et_nome_usuario"
-        app:layout_constraintTop_toBottomOf="@id/et_nome_usuario" />
+        android:text="@string/search_repositopries"
+        app:layout_constraintEnd_toEndOf="@id/actv_username"
+        app:layout_constraintStart_toStartOf="@id/actv_username"
+        app:layout_constraintTop_toBottomOf="@id/actv_username" />
+
+    <TextView
+        android:id="@+id/tv_usernames"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_search"
+        tools:text="usernames list here"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_lista_repositories"
+        android:id="@+id/rv_list_repositories"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_confirmar"
+        app:layout_constraintTop_toBottomOf="@id/tv_usernames"
         tools:listitem="@layout/repository_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
